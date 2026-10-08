@@ -110,14 +110,22 @@ def create_app():
             # Group columns by table
             tables = {}
             for col in columns:
-                t_name = col["table_name"]
+                t_name = col.get("table_name") or col.get("TABLE_NAME")
+                c_name = col.get("column_name") or col.get("COLUMN_NAME")
+                d_type = col.get("data_type") or col.get("DATA_TYPE")
+                is_null = col.get("is_nullable") or col.get("IS_NULLABLE")
+                c_key = col.get("column_key") or col.get("COLUMN_KEY")
+
+                if not t_name:
+                    continue
+
                 if t_name not in tables:
                     tables[t_name] = {"name": t_name, "columns": [], "row_count": 0}
                 tables[t_name]["columns"].append({
-                    "name": col["column_name"],
-                    "type": col["data_type"],
-                    "nullable": col["is_nullable"] == "YES",
-                    "key": col["column_key"]
+                    "name": c_name,
+                    "type": d_type,
+                    "nullable": is_null == "YES",
+                    "key": c_key
                 })
 
             # Get row count for each table
@@ -125,7 +133,7 @@ def create_app():
                 cursor.execute(f"SELECT COUNT(*) as count FROM `{t_name}`")
                 row = cursor.fetchone()
                 if row:
-                    tables[t_name]["row_count"] = row["count"]
+                    tables[t_name]["row_count"] = row.get("count") if "count" in row else row.get("COUNT", 0)
 
             cursor.close()
             conn.close()
