@@ -1,3 +1,6 @@
+import React from 'react'
+import { highlightSql } from '../utils/sqlHighlighter'
+
 export default function QueryVisualizer({ query, elapsedMs }) {
   if (!query) return null
   return (
@@ -6,7 +9,7 @@ export default function QueryVisualizer({ query, elapsedMs }) {
         <span>Live Query</span>
         {elapsedMs != null && <span className="elapsed">{elapsedMs} ms</span>}
       </div>
-      <pre><code>{query}</code></pre>
+      <pre><code>{highlightSql(query)}</code></pre>
     </div>
   )
 }
