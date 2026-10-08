@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 /**
  * Enhanced Progressive HintPanel.
  * Allows step-by-step hint revelation or full expansion for guided learning.
+ * Clean, compact styling with a calm slate accent.
  */
 export default function HintPanel({ hints = [] }) {
   const [open, setOpen] = useState(false)
@@ -31,7 +32,9 @@ export default function HintPanel({ hints = [] }) {
           <div>
             <strong>Guided Lab Hints &amp; Walkthrough</strong>
             <span className="hint-counter">
-              ({hints.length} hints available)
+              {open
+                ? `Showing ${revealedCount} of ${hints.length} hints`
+                : `${hints.length} hints available for this challenge`}
             </span>
           </div>
         </div>
